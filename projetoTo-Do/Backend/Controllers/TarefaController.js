@@ -19,5 +19,14 @@ export default class TarefaController {
         } catch(error) {
             return res.status(500).json({message: "Problema ao salvar a tarefa", error });
         }
-    }
+    } //Fim Create
+
+    static async GetAll(req, res){
+        try {
+            const tarefas = await Tarefa.find();
+            return res.status(200).json({message: "Todas as tarefas retornadas com sucesso", tarefas});
+        } catch(erro) {
+            return res.status(500).json({message: "Problema ao retornar as tarefas", erro});
+        }
+    } //Fim GetAll
 }

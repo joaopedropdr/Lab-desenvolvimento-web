@@ -10,3 +10,4 @@ async function main(){
 main().catch((err) =>{
     console.log(`Erro na conexao ${err}`)
 })
+export default mongoose;
