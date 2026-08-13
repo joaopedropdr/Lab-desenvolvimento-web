@@ -5,7 +5,7 @@
     "description": "Documentação para a geração automatica dos testes com o swagger",
     "version": "1.0.0"
   },
-  "host": "localhost/5000",
+  "host": "localhost:5000",
   "basePath": "/ToDo",
   "schemes": [
     "http"

@@ -12,6 +12,7 @@ const tarefaSchema = new Schema({
     dataLimite: {
         type: Date,
         required: true,
+        default: Date.now,
     },
     situacao: {
         type: String,

@@ -4,7 +4,7 @@ const doc = {
         title: "API ToDo List",
         description: "Documentação para a geração automatica dos testes com o swagger"
     },
-    host: "localhost/5000",
+    host: "localhost:5000",
     basePath: "/ToDo", 
 }
 // Nome do arquivo gerado pelo swagger
