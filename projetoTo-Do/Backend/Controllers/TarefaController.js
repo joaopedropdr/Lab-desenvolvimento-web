@@ -1,4 +1,4 @@
-import Tarefa from "../Models/tarefa.js";
+import Tarefa from "../Models/Tarefa.js";
 import {Types} from "mongoose";
 
 export default class TarefaController {
