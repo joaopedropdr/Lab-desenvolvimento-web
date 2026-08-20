@@ -13,7 +13,7 @@ export default function TodoForm() {
         setSaving(true);
         try {
             await createTodo({titulo, descricao, dataLimite, situacao});
-            // navigate("/")
+            navigate("/")
         }catch(error) {
             alert("Erro ao criar a tarefa" + (error.message));
         }

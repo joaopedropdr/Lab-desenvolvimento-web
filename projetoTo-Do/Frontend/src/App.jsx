@@ -15,7 +15,7 @@ export default function App() {
       </header>
       <main className='max-w-3xl mx-auto bg-white rouded-lg shadow p-6'>
         <Routes>
-          {/* <Route path="/" element={<TodoList />}/> */}
+          <Route path="/" element={<TodoList />}/>
           <Route path="/new" element={<TodoForm />}/>
         </Routes>
       </main>
