@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
-import routes from "./Routes/routes.js";
+import routesTarefa from "./Routes/routesTarefa.js";
+import routesUsuario from "./Routes/routesUsuario.js";
 import swaggerUi from "swagger-ui-express";
 // suporte para importar arquivo json usando ESModules
 import {createRequire} from "module";
@@ -14,5 +15,7 @@ app.use(cors({
 }));
 // obrigatoriamente o swagger deve vir antes das rotas
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-app.use("/ToDo", routes);
+app.use("/ToDo", routesTarefa);
+app.use("/ToDo", routesUsuario);
 app.listen(5000);
+
