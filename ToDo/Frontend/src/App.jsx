@@ -103,7 +103,9 @@ export default function App() {
                   path="todos"
                   element={
                     isAuthenticated ? (
-                      <TodoList usuarioLogado={usuarioLogado} /> 
+                      <TodoList 
+                        usuarioLogado={usuarioLogado}
+                       /> 
                     ) : (
                       <Navigate to="/login" replace />
                     )

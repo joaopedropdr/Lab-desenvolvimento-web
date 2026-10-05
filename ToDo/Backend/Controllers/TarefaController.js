@@ -52,21 +52,19 @@ export default class TarefaController{
 
     static async editStatus(req, res) {
         try {
-            const { id } = req.params;
-            const { status } = req.body; // 'pendente', 'finalizada' ou 'cancelada'
-
-            const tarefaAtualizada = await Tarefa.findByIdAndUpdate(
-                id, 
-                { status }, 
-                { new: true } // Retorna o documento já atualizado
-            );
-
-            if (!tarefaAtualizada) {
+            const {idTarefa, novoStatus} = req.body; // 'pendente', 'finalizada' ou 'cancelada'
+            if(!idTarefa || !novoStatus) {
                 return res.status(404).json({ error: "Tarefa não encontrada." });
             }
+            const tarefaAtualizada = await Tarefa.findByIdAndUpdate(
+                idTarefa, 
+                {situacao: novoStatus}, 
+                { returnDocument: 'after' } // Retorna o documento já atualizado
+            );
 
-            res.status(200).json(tarefaAtualizada);
+            res.status(200).json({message:"Status modificado com sucesso",tarefaAtualizada });
         } catch (error) {
+            console.log(error)
             res.status(500).json({ error: "Erro ao atualizar status." });
         }
     }

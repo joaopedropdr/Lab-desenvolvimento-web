@@ -26,6 +26,15 @@ export default function TodoList({ usuarioLogado }) {
     fetchTodos();
   }, []);
 
+  const handleUpdateStatus = (tarefaAtualizada) => {
+    setTodos((prevTodos) =>
+      prevTodos.map((t) =>
+        (t._id === tarefaAtualizada._id || t.id === tarefaAtualizada.id)
+          ? tarefaAtualizada
+          : t
+      )
+    );
+  };
   return (
     <div className="bg-white rounded-xl border border-gray-200 p-6 md:p-8">
       {/* Cabeçalho */}
@@ -68,6 +77,7 @@ export default function TodoList({ usuarioLogado }) {
                 key={todo._id || todo.id}
                 todo={todo}
                 usuarioLogado={usuarioLogado}
+                onUpdateStatus={handleUpdateStatus}
               />
             ))
           )}

@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import TodoChatModal from "./TodoChatModal.jsx";
-
-export default function TodoItem({ todo, usuarioLogado }) {
+import {editStatus} from "../api/Todo.jsx";
+export default function TodoItem({ todo, usuarioLogado, onUpdateStatus }) {
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // Extrai as iniciais do nome (ex: "Carlos Silva" -> "CS")
   const getInitials = (nome) => {
@@ -11,7 +12,7 @@ export default function TodoItem({ todo, usuarioLogado }) {
     if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
     return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
   };
-
+  
   const criador = todo.criadoPor;
   const participantes = todo.participam || [];
 
@@ -22,7 +23,23 @@ export default function TodoItem({ todo, usuarioLogado }) {
 
   // Lista com todos os nomes para tooltip
   const todosNomesParticipantes = participantes.map((p) => p.nome).join(", ");
-
+  // Metodo para mudar o status da tarefa
+  const editStatusTarefa = async (idTarefa, novoStatus) => {
+    try {
+      setLoading(true);
+      // Chamada PATCH para a sua API Node.js
+      const resposta = await editStatus({idTarefa, novoStatus});
+      // Se o componente pai passou uma função para atualizar a lista, chamamos ela
+      if (onUpdateStatus) {
+        onUpdateStatus(resposta.data);
+      }
+    } catch (error) {
+      console.error("Erro ao alterar status:", error);
+      alert("Não foi possível atualizar o status da tarefa.");
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <>
       <div className="flex flex-col gap-3 p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow bg-white">
@@ -104,15 +121,42 @@ export default function TodoItem({ todo, usuarioLogado }) {
               </div>
             )}
 
-            {/*Botão para abrir o modal de Chat */}
-            <button
-              onClick={() => setIsChatOpen(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg transition-colors cursor-pointer ml-auto"
-              title="Abrir chat da tarefa"
-            >
-              <span>💬</span>
-              <span>Chat</span>
-            </button>
+            {/* Grupo de Botões de Ação (Finalizar, Cancelar e Chat) */}
+            <div className="flex items-center gap-1.5 ml-auto">
+              {/* Botão Finalizar (aparece apenas se não estiver concluída) */}
+              {todo.situacao !== "CONCLUIDA" && (
+                <button
+                  onClick={() => editStatusTarefa(todo._id || todo.id, "CONCLUIDA")}
+                  disabled={loading}
+                  className="px-2.5 py-1.5 text-xs font-semibold text-green-600 bg-green-50 hover:bg-green-100 border border-green-200 rounded-lg transition-colors cursor-pointer disabled:opacity-50"
+                  title="Marcar tarefa como concluída"
+                >
+                  ✓ Concluir
+                </button>
+              )}
+
+              {/* Botão Cancelar (aparece apenas se não estiver cancelada) */}
+              {todo.situacao !== "CANCELADA" && (
+                <button
+                  onClick={() => editStatusTarefa(todo._id || todo.id, "CANCELADA")}
+                  disabled={loading}
+                  className="px-2.5 py-1.5 text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 rounded-lg transition-colors cursor-pointer disabled:opacity-50"
+                  title="Cancelar tarefa"
+                >
+                  ✕ Cancelar
+                </button>
+              )}
+
+              {/* Botão para abrir o modal de Chat */}
+              <button
+                onClick={() => setIsChatOpen(true)}
+                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg transition-colors cursor-pointer"
+                title="Abrir chat da tarefa"
+              >
+                <span>💬</span>
+                <span>Chat</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
