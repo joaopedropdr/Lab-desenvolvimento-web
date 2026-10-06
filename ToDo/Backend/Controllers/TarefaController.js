@@ -60,9 +60,10 @@ export default class TarefaController{
                 idTarefa, 
                 {situacao: novoStatus}, 
                 { returnDocument: 'after' } // Retorna o documento já atualizado
-            );
+            ).populate("criadoPor", "nome")
+            .populate("participam", "nome");
 
-            res.status(200).json({message:"Status modificado com sucesso",tarefaAtualizada });
+            res.status(200).json({message:"Status modificado com sucesso", tarefaAtualizada });
         } catch (error) {
             console.log(error)
             res.status(500).json({ error: "Erro ao atualizar status." });

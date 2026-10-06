@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { getTodos } from "../api/Todo.jsx";
 import TodoItem from "../Components/TodoItem.jsx";
+import GraficoStatus from "../Components/GraficoStatus.jsx";
 import { Link } from "react-router-dom";
 
 //Recebe usuarioLogado nas props do componente
@@ -25,16 +26,30 @@ export default function TodoList({ usuarioLogado }) {
   useEffect(() => {
     fetchTodos();
   }, []);
-
-  const handleUpdateStatus = (tarefaAtualizada) => {
+const handleUpdateStatus = (respostaBackend) => {
+    // Extrai o objeto real de dentro da resposta da API
+    const tarefaAtualizada = respostaBackend.tarefaAtualizada;
+    if (!tarefaAtualizada) return;
     setTodos((prevTodos) =>
-      prevTodos.map((t) =>
-        (t._id === tarefaAtualizada._id || t.id === tarefaAtualizada.id)
-          ? tarefaAtualizada
-          : t
-      )
+      prevTodos.map((t) => {
+        const idAntigo = t._id || t.id;
+        const idNovo = tarefaAtualizada._id || tarefaAtualizada.id;
+        // Se for a tarefa que foi alterada, atualiza os dados dela
+        if (idAntigo === idNovo) {
+          return {
+            ...t,
+            ...tarefaAtualizada,
+            _id: idAntigo, // Garante a unicidade da key
+            criadoPor: tarefaAtualizada.criadoPor || t.criadoPor,
+            participam: tarefaAtualizada.participam || t.participam,
+            situacao: tarefaAtualizada.situacao || t.situacao
+          };
+        }
+        return t;
+      })
     );
   };
+
   return (
     <div className="bg-white rounded-xl border border-gray-200 p-6 md:p-8">
       {/* Cabeçalho */}
@@ -81,8 +96,11 @@ export default function TodoList({ usuarioLogado }) {
               />
             ))
           )}
+
+          <GraficoStatus todos={todos}/>
         </div>
       )}
     </div>
+
   );
 }
