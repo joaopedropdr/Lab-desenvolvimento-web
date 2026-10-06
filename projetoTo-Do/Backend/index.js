@@ -1,3 +1,4 @@
+import dotenv from "dotenv"
 import express from "express";
 import cors from "cors";
 import routesTarefa from "./Routes/routesTarefa.js";
@@ -5,6 +6,7 @@ import routesUsuario from "./Routes/routesUsuario.js";
 import swaggerUi from "swagger-ui-express";
 // suporte para importar arquivo json usando ESModules
 import {createRequire} from "module";
+dotenv.config();
 const require = createRequire(import.meta.url);
 const swaggerDocument = require("./swagger-output.json");
 const app = new express();

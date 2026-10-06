@@ -5,13 +5,14 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "swagger": "node swagger.js",
-    "start": "nodemon ./index.js localhost:5000"
+    "start": "nodemon ./index.js localhost:5000 node swagger.js && node index.js"
   },
   "author": "",
   "license": "ISC",
   "description": "",
   "type": "module",
   "dependencies": {
+    "argon2": "^0.45.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",

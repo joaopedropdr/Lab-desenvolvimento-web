@@ -10,5 +10,5 @@ const doc = {
 // Nome do arquivo gerado pelo swagger
 const outputFile = './swagger-output.json'; 
 // caminho para as rotas da api
-const routesFile = ['./Routes/routesTarefa.js', './Routes/routesUsuario'];
+const routesFile = ['./Routes/routesTarefa.js', './Routes/routesUsuario.js'];
 swaggerAutogen()(outputFile, routesFile, doc);
