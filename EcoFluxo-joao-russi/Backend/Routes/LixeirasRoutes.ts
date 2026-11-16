@@ -4,8 +4,8 @@ import LixeirasController from '../Controllers/LixeirasController.js';
 
 const routerLixeira = Router();
 // Rota com autenticação
-routerLixeira.post("/createLixeiras",  LixeirasController.Create);
-routerLixeira.get("/getLixeiras", LixeirasController.GetLixeiras);
+routerLixeira.post("/createLixeiras", autenticacaoToken, autorizacaoPerfil, LixeirasController.Create);
+routerLixeira.get("/getLixeiras", autenticacaoToken, autorizacaoPerfil, LixeirasController.GetLixeiras);
 
 
 export default routerLixeira;

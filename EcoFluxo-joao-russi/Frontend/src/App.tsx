@@ -7,8 +7,10 @@ import Footer from './Components/Footer';
 import Home from './Pages/Home';
 import Login from './Pages/Login';
 import Verify2FA from './Pages/Verify2FA';
+import EcoPontos from './Pages/ecoPontos';
+import Lixeiras from './Pages/lixeiras';
 
-import api from "./utils/api";
+import { usuarioApi } from "./utils/api";
 
 function AppContent() {
   const [user, setUser] = useState<any>(null);
@@ -18,7 +20,7 @@ function AppContent() {
   useEffect(() => {
     const checkUserSession = async () => {
       try {
-        const response = await api.get("/me"); 
+        const response = await usuarioApi.profile();
         if (response.status === 200) {
           setUser(response.data.usuario || response.data); 
         }
@@ -36,7 +38,7 @@ function AppContent() {
 
   const handleLogout = async () => {
     try{
-      await api.post("/logout"); 
+      await usuarioApi.logout();
     }
     catch(error){
       console.error("Erro ao deslogar:", error);
@@ -62,7 +64,9 @@ function AppContent() {
       
       <main className="grow w-full pt-32 pb-20 flex flex-col justify-center"> 
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home user={user} />} />
+          <Route path="/ecopontos" element={<EcoPontos user={user} />} />
+          <Route path="/lixeiras" element={<Lixeiras user={user} />} />
           <Route path="/login" element={user ? <Navigate to="/dashboard" /> : <Login />} />
           <Route path="/verify-2fa" element={user ? <Navigate to="/dashboard" /> : <Verify2FA onLoginSuccess={(u: any) => setUser(u)} />} />
           <Route path="*" element={<Navigate to="/" />} />

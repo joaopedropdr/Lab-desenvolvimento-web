@@ -1,15 +1,63 @@
 import prisma from "../lib/prisma.js";
 import type {Request, Response} from "express";
+import { hash, verify } from "@node-rs/argon2";
+import jwt from 'jsonwebtoken'
+import { type AuthRequest } from "../Middlewares/seguranca.js";
+import {send2FACodeEmail} from "../services/emailServices.js"
+const JWT_SECRET = process.env.JWT_SECRET || "sua_chave_secreta_super_segura";
 export default class UsuarioController{
      static async Create(req:Request,res:Response){
         try
          {
-            const {} = req.body;
-            //verificação dos dados obrigatórios
+            const { nome, email, senha } = req.body;
 
-            //inserir no banco de dados
+            if (typeof nome !== "string" || !nome.trim() ||
+                typeof email !== "string" || !email.trim() ||
+                typeof senha !== "string" || !senha) {
+                return res.status(400).json({
+                    message: "Nome, e-mail e senha são obrigatórios.",
+                });
+            }
+
+            const nomeNormalizado = nome.trim();
+            const emailNormalizado = email.trim().toLowerCase();
+
+            const usuarioExistente = await prisma.usuario.findUnique({
+                where: { email: emailNormalizado },
+            });
+
+            if (usuarioExistente) {
+                return res.status(409).json({ message: "Este e-mail já está cadastrado." });
+            }
+
+            const senhaHash = await hash(senha);
+            const novoUsuario = await prisma.usuario.create({
+                data: {
+                    nome: nomeNormalizado,
+                    email: emailNormalizado,
+                    senha: senhaHash,
+                    // O schema define MORADOR como padrão; o perfil não é aceito do cliente.
+                },
+                select: {
+                    id: true,
+                    nome: true,
+                    email: true,
+                    perfil: true,
+                    criadoEm: true,
+                },
+            });
+
+            return res.status(201).json({
+                message: "Usuário cadastrado com sucesso.",
+                usuario: novoUsuario,
+            });
         } catch (error) {
-            
+            // O índice unique do schema também cobre duas requisições simultâneas.
+            if (typeof error === "object" && error !== null && "code" in error && error.code === "P2002") {
+                return res.status(409).json({ message: "Este e-mail já está cadastrado." });
+            }
+            console.error("Erro ao cadastrar usuário:", error);
+            return res.status(500).json({ message: "Erro interno do servidor ao cadastrar o usuário." });
         }
         
     };

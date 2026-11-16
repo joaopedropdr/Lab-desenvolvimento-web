@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../utils/api";
+import { usuarioApi } from "../utils/api";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -16,7 +16,7 @@ export default function Login() {
 
     try {
       // Chamada para a rota de login do backend (email e senha)
-      await api.post("/login", { 
+      await usuarioApi.login({
         email, 
         senha: password 
       });

@@ -1,4 +1,4 @@
-import { Perfil } from "@prisma/client";
+import { Perfil } from "../generated/prisma/client.js";
 import { hash } from "@node-rs/argon2";
 import prisma from "../lib/prisma.js";
 
@@ -31,7 +31,7 @@ async function main() {
   }
 
   // 2. DADOS DO MORADOR
-  const emailMorador = "morador@morador.com"; // E-mail diferente do gestor!troque por um que você tenha acesso
+  const emailMorador = "recebadasilva123@gmail.com"; // E-mail diferente do gestor!troque por um que você tenha acesso
   const senhaMorador = "Morador@123";         //troque se achar necessário
 
   const moradorExistente = await prisma.usuario.findUnique({

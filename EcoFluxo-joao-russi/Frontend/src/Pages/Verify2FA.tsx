@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import api from '../utils/api'; 
+import { usuarioApi } from '../utils/api';
 
 interface Verify2FAProps {
   onLoginSuccess: (usuario: any) => void;
@@ -30,9 +30,9 @@ const Verify2FA: React.FC<Verify2FAProps> = ({ onLoginSuccess }) => {
 
     try {
       // Chamada para a rota do backend que valida o código 2FA
-      const response = await api.post("/verify-2fa", {
+      const response = await usuarioApi.verify2FA({
         email: stateEmail,
-        codigo: codigo
+        codigo,
       });
 
       // Supondo que o backend retorne o usuário logado e o token após validar o 2FA
